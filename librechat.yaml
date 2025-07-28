@@ -1,0 +1,93 @@
+version: 1.2.1
+
+# Cache settings
+cache: true
+
+# Actions Configuration for PKM Integration
+actions:
+  allowedDomains:
+    - 'localhost'
+    - '127.0.0.1'
+    - 'host.docker.internal' # For Docker environments
+
+# Endpoint configuration with PKM Actions
+endpoints:
+  openAI:
+    plugins: true
+    assistants: true
+    models:
+      default: ['gpt-4o', 'gpt-4o-mini', 'gpt-3.5-turbo']
+      fetch: true
+    titleConvo: true
+    titleModel: 'gpt-4o-mini'
+
+    # PKM Search Actions
+    actions:
+      - name: 'PKM Search'
+        description: 'Search through your personal knowledge management system (15,184 chunks from 3,425 files)'
+        url: 'http://host.docker.internal:3001/search'
+        method: 'POST'
+        headers:
+          Content-Type: 'application/json'
+        body:
+          query: '{{query}}'
+          k: 5
+          include_metadata: true
+
+      - name: 'PKM Advanced Search'
+        description: 'Advanced search with filters for file type, date range, and similarity threshold'
+        url: 'http://host.docker.internal:3001/search/advanced'
+        method: 'POST'
+        headers:
+          Content-Type: 'application/json'
+        body:
+          query: '{{query}}'
+          k: '{{k:5}}'
+          include_metadata: true
+          file_type_filter: '{{file_type:}}'
+          date_range: '{{date_range:}}'
+          similarity_threshold: '{{similarity_threshold:0.7}}'
+
+      - name: 'PKM Stats'
+        description: 'Get statistics about your PKM system (total files, chunks, embedding status)'
+        url: 'http://host.docker.internal:3001/stats'
+        method: 'GET'
+        headers:
+          Content-Type: 'application/json'
+
+  # You can also add PKM actions to other endpoints
+  anthropic:
+    plugins: true
+    models:
+      default: ['claude-3-5-sonnet-20241022', 'claude-3-5-haiku-20241022']
+      fetch: true
+    titleConvo: true
+    titleModel: 'claude-3-5-haiku-20241022'
+
+    # Same PKM actions for Claude
+    actions:
+      - name: 'PKM Search'
+        description: 'Search through your personal knowledge management system'
+        url: 'http://host.docker.internal:3001/search'
+        method: 'POST'
+        headers:
+          Content-Type: 'application/json'
+        body:
+          query: '{{query}}'
+          k: 5
+          include_metadata: true
+# MCP Servers Configuration
+mcpServers:
+  # Flexible PKM Knowledge Server (TypeScript - Enhanced with Smart Filtering)
+  pkm-knowledge:
+    command: npx
+    args:
+      - tsx
+      - ${PKM_AI_BRIDGE_PATH}/mcp-pkm-server.ts
+    env:
+      JWT_SECRET: '${JWT_SECRET}'
+      PKM_USER_ID: '${PKM_USER_ID}'
+      RAG_API_URL: 'http://rag_api:8000'
+    timeout: 60000 # Increased timeout for complex queries
+    iconPath: '🧠'
+    description: 'Flexible PKM search with advanced filtering - handles ANY query type through enhanced search strategies and metadata enrichment'
