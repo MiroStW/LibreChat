@@ -1,3 +1,6 @@
 [submodule "LibreChat"]
 	path = LibreChat
 	url = https://github.com/danny-avila/LibreChat.git
+[submodule "pkm-ai-bridge"]
+	path = pkm-ai-bridge
+	url = https://github.com/MiroStW/pkm-ai-bridge.git
