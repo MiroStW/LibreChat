@@ -16,12 +16,16 @@
 ├── docker-compose.yml
 └── api/ (REST endpoints for embedding)
 
-📁 librechat-deployment (GitLab - Private)
+📁 LibreChat (GitHub - Private) - Deployment Repository
 ├── LibreChat/ (git submodule → upstream)
-├── docker-compose.override.yml
-├── librechat.yaml (PKM MCP config)
-├── .env.template
+├── pkm-ai-bridge/ (git submodule → your PKM service)
+├── docker-compose.yml (orchestration config)
+├── .env.example (environment template)
+├── .gitignore (excludes database files)
 └── scripts/ (update and deployment automation)
+   ├── deploy.sh (main deployment manager)
+   ├── update-librechat.sh (LibreChat updater)
+   └── update-pkm-service.sh (PKM service updater)
 ```
 
 ### **Benefits of This Approach**
@@ -37,7 +41,7 @@
 ### **Git Submodule Approach**
 
 ```bash
-# In librechat-deployment repo
+# In LibreChat deployment repo
 git submodule add https://github.com/danny-avila/LibreChat.git LibreChat
 git submodule update --remote --merge
 
