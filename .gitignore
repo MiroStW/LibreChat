@@ -5,6 +5,10 @@ data-node/
 mongo-data/
 mongodb-data/
 
+# MeiliSearch data (should never be committed)
+meili_data/
+meili_data_*/
+
 # Environment files (contain secrets)
 .env
 .env.local
