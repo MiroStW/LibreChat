@@ -1,9 +1,10 @@
 # LibreChat Deployment Repository .gitignore
 
-# MongoDB database files (should never be committed)
+# Database files (should never be committed)
 data-node/
 mongo-data/
 mongodb-data/
+pgdata/
 
 # MeiliSearch data (should never be committed)
 meili_data/

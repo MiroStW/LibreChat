@@ -105,10 +105,15 @@ Create comprehensive `.gitignore`:
 
 ```bash
 # .gitignore
-# MongoDB database files (should never be committed)
-data-node/
-mongo-data/
-mongodb-data/
+# Database files (should never be committed)
+data-node/      # MongoDB data
+mongo-data/     # Alternative MongoDB paths
+mongodb-data/   # Alternative MongoDB paths
+pgdata/         # PostgreSQL/Vector DB data
+
+# MeiliSearch data
+meili_data/
+meili_data_*/
 
 # Environment files (contain secrets)
 .env
@@ -124,6 +129,38 @@ temp/
 *.backup
 backup-*/
 ```
+
+### **⚠️ Data Persistence Improvements (CRITICAL)**
+
+**Problem Solved:** Docker volume conflicts causing data loss during rebuilds.
+
+**Solution:** Migrate from Docker volumes to local directories for all databases:
+
+```yaml
+# Before (PROBLEMATIC - Docker volumes)
+vectordb:
+  volumes:
+    - pgdata2:/var/lib/postgresql/data
+
+# After (FIXED - Local directories)
+vectordb:
+  volumes:
+    - ./pgdata:/var/lib/postgresql/data  # LOCAL PERSISTENT STORAGE
+```
+
+**Benefits:**
+
+- ✅ **Survives `docker-compose down -v`** - Data in local directories
+- ✅ **Survives `docker system prune`** - No volume dependencies
+- ✅ **No volume name conflicts** - Direct local paths
+- ✅ **Easy backup/restore** - Standard file operations
+- ✅ **Consistent with MongoDB pattern** - All databases use local storage
+
+**All Database Storage Now Local:**
+
+- `./data-node/` → MongoDB
+- `./pgdata/` → PostgreSQL/Vector Database
+- `./meili_data_v1.12/` → Meilisearch
 
 ---
 

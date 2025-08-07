@@ -21,7 +21,7 @@
 ├── pkm-ai-bridge/ (git submodule → your PKM service)
 ├── docker-compose.yml (orchestration config)
 ├── .env.example (environment template)
-├── .gitignore (excludes database files)
+├── .gitignore (excludes database files: data-node/, pgdata/, meili_data_*/)
 └── scripts/ (update and deployment automation)
    ├── deploy.sh (main deployment manager)
    ├── update-librechat.sh (LibreChat updater)
@@ -80,7 +80,7 @@ echo "🧪 Run tests to verify compatibility"
 
 ```yaml
 # docker-compose.production.yml
-version: '3.8'
+version: "3.8"
 
 services:
   # LibreChat services (from upstream)
@@ -97,7 +97,7 @@ services:
   pkm-service:
     image: your-registry/pkm-embedder:latest
     ports:
-      - '3001:3001'
+      - "3001:3001"
     environment:
       - NOTES_REPO_URL=${NOTES_REPO_URL}
       - GITLAB_TOKEN=${GITLAB_TOKEN}
